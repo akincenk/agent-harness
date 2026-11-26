@@ -63,6 +63,7 @@ Read these numbers honestly:
 
 - In four attacks (injected write, injected `../secret.txt`, calculator code, injected `curl`) the model never attempted the harmful step, so the guardrails were not needed. In the path and symlink attacks the model tried and the harness refused. The guarantee that the guardrails hold **even when the model obeys the attacker** comes from the test suite, where a scripted model performs each attack on purpose.
 - Parallel sub-agents gave no speed-up here (4 small tasks: 5.9 s in sequence, 6.2 s in parallel) because Ollama answers one request at a time by default. Parallelism pays off with a server that serves concurrent requests (for example `OLLAMA_NUM_PARALLEL` or a hosted API); the harness itself runs the sub-agents concurrently, as the tests show.
+- Measured with `OLLAMA_NUM_PARALLEL` (Ollama 0.40.17, same 4 tasks, 3 runs each after a warm-up, 2026-11-26). With `OLLAMA_NUM_PARALLEL=1` the parallel run was no faster (median 4.9 s in sequence, 5.3 s in parallel). With `OLLAMA_NUM_PARALLEL=4` it was 1.3x faster than the sequence on that server (median 6.3 s in sequence, 4.7 s in parallel), but each single request got slower, so against the one-request server the gain is small (4.7 s against 4.9 s). Tasks this short leave little to overlap; longer sub-agent runs or a hosted API may gain more, but that is not measured here.
 - 14 tasks are a smoke test of behaviour, not a benchmark of the model.
 
 ## Tests
