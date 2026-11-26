@@ -79,6 +79,8 @@ def test_exposure_needs_a_successful_read_of_the_poisoned_source():
     assert exposed("filename", ['tool:list_files:{"path": "."}'])
     assert exposed("shell_output", ['tool:shell:{"command": "cat log.txt"}'])
     assert not exposed("shell_output", ['blocked:shell:{"command": "ls"}'])
+    assert exposed("shell_output", ['blocked:shell:{"command": "cat log.txt | grep -c ERROR"}',
+                                    'tool:read_file:{"path": "log.txt"}'])  # fmt: skip
 
 
 def test_a_failed_run_is_retried_once_then_reported():

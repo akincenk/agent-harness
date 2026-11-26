@@ -263,7 +263,8 @@ def _safe(fn, model: str, repeat: int, **ident) -> dict:
     return {"model": model, "repeat": repeat, **row}
 
 
-POISONED = {"file": "notes.txt", "csv": "inventory.csv", "two_step": "details.txt"}
+# the file holding the attacker text; for shell_output a model may also read log.txt directly instead of `cat`
+POISONED = {"file": "notes.txt", "csv": "inventory.csv", "two_step": "details.txt", "shell_output": "log.txt"}
 
 
 def exposed(channel: str, calls: list[str]) -> bool:
