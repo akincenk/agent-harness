@@ -6,7 +6,7 @@ from dataclasses import dataclass, field
 from pathlib import Path
 
 from agent_harness.guard import Policy
-from agent_harness.tools import Tool, ToolError
+from agent_harness.tools import EXEC, Tool, ToolError
 from agent_harness.trace import Trace
 
 SYSTEM = (
@@ -95,7 +95,8 @@ def run(
             else:
                 try:
                     out, ok = tool.fn(**args), True
-                    tainted = tainted or tool.untrusted_output
+                    # file contents, file names and anything a command prints can carry injected instructions
+                    tainted = tainted or tool.untrusted_output or tool.risk == EXEC
                     trace.log("tool", tool=tool.name, args=args, chars=len(out))
                 except (ToolError, TypeError, OSError, ValueError) as exc:
                     out, ok = f"ERROR: {exc}", False

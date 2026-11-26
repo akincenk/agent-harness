@@ -13,7 +13,7 @@ It covers the parts that make agents safe to leave running: loop budgets, failur
 | Runaway loops | Budgets for steps, tool calls and wall time. The same call with the same arguments more than three times stops the run. |
 | Failing tools | After 3 failed calls in a row the model is told to change approach; after 6 the run stops. |
 | Emergency stop | A kill-switch file is checked before every model call. |
-| Prompt injection | Tool output is labelled as untrusted data. Once untrusted content (a file) is in the context, tools that write or execute need human approval, even if they were pre-approved. |
+| Prompt injection | Tool output is labelled as untrusted data. Once untrusted content (a file, a list of file names, anything a command prints) is in the context, tools that write or execute need human approval, even if they were pre-approved. |
 | Risky tools | `write_file` and `shell` need approval by default; tools outside the allow-list are refused. |
 | File access | Every path is resolved inside the workspace: absolute paths, `..` and symlinks that point outside are refused. |
 | Code execution | `calculate` parses arithmetic with Python's `ast` instead of `eval`. `shell` runs only inside a macOS `sandbox-exec` profile with no network and writes only inside the workspace; on systems without a sandbox it is disabled (fails closed). |
@@ -67,7 +67,7 @@ Read these numbers honestly:
 
 ## Tests
 
-`pytest` runs 24 tests with a scripted fake model, so every guardrail is checked deterministically without a network or a GPU: path escapes, symlinks, injection followed by a write, approval flow, failure limits, loop detection, kill switch, budgets, the calculator, traces, parallel sub-agents, and (on macOS) that the shell sandbox blocks the network and writes outside the workspace.
+`pytest` runs 26 tests with a scripted fake model, so every guardrail is checked deterministically without a network or a GPU: path escapes, symlinks, injection followed by a write (through file contents, file names or command output), approval flow, failure limits, loop detection, kill switch, budgets, the calculator, traces, parallel sub-agents, and (on macOS) that the shell sandbox blocks the network and writes outside the workspace.
 
 ```
 src/agent_harness/

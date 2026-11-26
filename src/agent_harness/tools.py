@@ -126,7 +126,7 @@ def default_tools(ws: Workspace) -> list[Tool]:
     path = {"path": {"type": "string", "description": "path relative to the workspace"}}
     return [
         Tool("read_file", "Read a text file from the workspace.", path, read_file, READ, untrusted_output=True),
-        Tool("list_files", "List files in the workspace.", path, list_files, READ),
+        Tool("list_files", "List files in the workspace.", path, list_files, READ, untrusted_output=True),
         Tool("calculate", "Evaluate an arithmetic expression.", {"expression": {"type": "string"}}, calculate, READ),
         Tool(
             "write_file",
